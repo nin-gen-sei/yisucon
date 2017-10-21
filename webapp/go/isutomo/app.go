@@ -99,11 +99,13 @@ func (db *DB) fetchFriend(user string) (*Friend, error) {
 	return friend, nil
 }
 
+// TODO これすごい
 func (db *DB) updateFriend(user, friends string) error {
 	_, err := db.Conn.Exec("UPDATE friends SET friends = ? WHERE me = ?", friends, user)
 	return err
 }
 
+// TODO ここ
 func (friend *Friend) getFriends() []string {
 	return strings.Split(friend.Friends, ",")
 }

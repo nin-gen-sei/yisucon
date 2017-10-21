@@ -6,6 +6,9 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'mysql2-cs-bind'
 
+require 'const_users'
+user_ids = {}
+
 module Isuwitter
   class WebApp < Sinatra::Base
     use Rack::Session::Cookie, key: 'isu_session', secret: 'kioicho'
@@ -13,6 +16,10 @@ module Isuwitter
 
     PERPAGE = 50
     ISUTOMO_ENDPOINT = 'http://localhost:8081'
+
+    users.each_with_index {|v,i|
+      user_ids[v] = i
+    }
 
     helpers do
       def db
@@ -36,16 +43,12 @@ module Isuwitter
 
       def get_user_id name
         return nil if name.nil?
-
-        user = db.xquery(%| SELECT * FROM users WHERE name = ? |, name).first
-        user ? user['id'] : nil
+        return user_ids[name]
       end
 
       def get_user_name id
         return nil if id.nil?
-
-        user = db.xquery(%| SELECT * FROM users WHERE id = ? |, id).first
-        user['name']
+        return users[id]
       end
 
       def htmlify text
