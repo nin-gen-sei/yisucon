@@ -1,24 +1,28 @@
 require 'digest/sha1'
 require 'json'
 require 'net/http'
+require 'rack-lineprof'
 
 require 'sinatra/base'
 require 'sinatra/json'
 require 'mysql2-cs-bind'
 
-require 'const_users'
+require_relative './const_users.rb'
 
 module Isuwitter
   class WebApp < Sinatra::Base
     use Rack::Session::Cookie, key: 'isu_session', secret: 'kioicho'
+    use Rack::Lineprof, profile: 'isuwitter.rb'
+    set :environment, ENV["RACK_ENV"] == "deployment"? :production : ENV["RACK_ENV"].to_sym
     set :public_folder, File.expand_path('../../public', __FILE__)
 
     PERPAGE = 50
     ISUTOMO_ENDPOINT = 'http://localhost:8081'
 
-    users.each_with_index {|v,i|
-      user_ids[v] = i
-    }
+
+    USERS = const_users
+    USER_IDS = {}
+    USERS.each_with_index { |v,i| USER_IDS[v] = i }
 
     helpers do
       def db
@@ -32,22 +36,30 @@ module Isuwitter
         )
       end
 
-      def get_all_tweets until_time
+      def get_all_tweets(until_time, limit, query=nil)
         if until_time
-          db.xquery(%| SELECT * FROM tweets WHERE created_at < ? ORDER BY created_at DESC |, until_time)
+          if query
+            db.xquery(%| SELECT * FROM tweets WHERE created_at < ? AND text LIKE ? ORDER BY created_at DESC LIMIT #{limit} |, until_time, "%#{query}%")
+          else
+            db.xquery(%| SELECT * FROM tweets WHERE created_at < ? ORDER BY created_at DESC LIMIT #{limit} |, until_time)
+          end
         else
-          db.query(%| SELECT * FROM tweets ORDER BY created_at DESC |)
+          if query
+            db.xquery(%| SELECT * FROM tweets WHERE text LIKE ? ORDER BY created_at DESC LIMIT #{limit} |, "%#{query}%")
+          else
+            db.query(%| SELECT * FROM tweets ORDER BY created_at DESC LIMIT #{limit} |)
+          end
         end
       end
 
       def get_user_id name
         return nil if name.nil?
-        return user_ids[name]
+        return USER_IDS[name]
       end
 
       def get_user_name id
         return nil if id.nil?
-        return users[id]
+        return USERS[id]
       end
 
       def htmlify text
@@ -79,7 +91,7 @@ module Isuwitter
 
       friends_name = {}
       @tweets = []
-      get_all_tweets(params[:until]).each do |row|
+      get_all_tweets(params[:until], 114514).each do |row|
         row['html'] = htmlify row['text']
         row['time'] = row['created_at'].strftime '%F %T'
         friends_name[row['user_id']] ||= get_user_name row['user_id']
@@ -191,13 +203,12 @@ module Isuwitter
 
       friends_name = {}
       @tweets = []
-      get_all_tweets(params[:until]).each do |row|
+      get_all_tweets(params[:until], PERPAGE, @query).each do |row|
         row['html'] = htmlify row['text']
         row['time'] = row['created_at'].strftime '%F %T'
         friends_name[row['user_id']] ||= get_user_name row['user_id']
         row['name'] = friends_name[row['user_id']]
-        @tweets.push row if row['text'].include? @query
-        break if @tweets.length == PERPAGE
+        @tweets.push row
       end
 
       if params[:append]
@@ -236,11 +247,11 @@ module Isuwitter
 
       if params[:until]
         rows = db.xquery(%|
-          SELECT * FROM tweets WHERE user_id = ? AND created_at < ? ORDER BY created_at DESC
+          SELECT * FROM tweets WHERE user_id = ? AND created_at < ? ORDER BY created_at DESC LIMIT #{PERPAGE}
         |, user_id, params[:until])
       else
         rows = db.xquery(%|
-          SELECT * FROM tweets WHERE user_id = ? ORDER BY created_at DESC
+          SELECT * FROM tweets WHERE user_id = ? ORDER BY created_at DESC LIMIT #{PERPAGE}
         |, user_id)
       end
 
@@ -250,7 +261,6 @@ module Isuwitter
         row['time'] = row['created_at'].strftime '%F %T'
         row['name'] = @user
         @tweets.push row
-        break if @tweets.length == PERPAGE
       end
 
       if params[:append]

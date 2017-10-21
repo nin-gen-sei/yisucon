@@ -2,10 +2,14 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'mysql2-cs-bind'
 require 'json'
-require 'const_users'
+require 'rack-lineprof'
+require_relative './const_users'
 
 module Isutomo
   class WebApp < Sinatra::Base
+    use Rack::Lineprof, profile: 'isutomo.rb'
+    set :environment, ENV["RACK_ENV"] == "deployment"? :production : ENV["RACK_ENV"].to_sym
+
 
     helpers do
       def db
