@@ -34,7 +34,7 @@ module Isuwitter
         )
       end
 
-      def get_all_tweets(until_time, limit, query)
+      def get_all_tweets(until_time, limit, query=nil)
         if until_time
           if query
             db.xquery(%| SELECT * FROM tweets WHERE created_at < ? AND text LIKE ? ORDER BY created_at DESC LIMIT #{limit} |, until_time, "%#{query}%")
