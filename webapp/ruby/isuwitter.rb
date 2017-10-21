@@ -241,11 +241,11 @@ module Isuwitter
 
       if params[:until]
         rows = db.xquery(%|
-          SELECT * FROM tweets WHERE user_id = ? AND created_at < ? ORDER BY created_at DESC
+          SELECT * FROM tweets WHERE user_id = ? AND created_at < ? ORDER BY created_at DESC LIMIT #{PERPAGE}
         |, user_id, params[:until])
       else
         rows = db.xquery(%|
-          SELECT * FROM tweets WHERE user_id = ? ORDER BY created_at DESC
+          SELECT * FROM tweets WHERE user_id = ? ORDER BY created_at DESC LIMIT #{PERPAGE}
         |, user_id)
       end
 
@@ -255,7 +255,6 @@ module Isuwitter
         row['time'] = row['created_at'].strftime '%F %T'
         row['name'] = @user
         @tweets.push row
-        break if @tweets.length == PERPAGE
       end
 
       if params[:append]
