@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8fd6f56b-6cf0-4612-88d5-0ce90237fc81" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/sql/name_x.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/webapp/go/isutomo/app.go" afterPath="$PROJECT_DIR$/webapp/go/isutomo/app.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/webapp/ruby/isutomo.rb" afterPath="$PROJECT_DIR$/webapp/ruby/isutomo.rb" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/webapp/ruby/isuwitter.rb" afterPath="$PROJECT_DIR$/webapp/ruby/isuwitter.rb" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -66,11 +63,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="isutomo.rb" pinned="false" current-in-tab="false">
+      <file leaf-file-name="isutomo.rb" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/webapp/ruby/isutomo.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-217">
-              <caret line="1021" column="14" lean-forward="false" selection-start-line="1021" selection-start-column="10" selection-end-line="1021" selection-end-column="14" />
+            <state relative-caret-position="60">
+              <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -96,11 +93,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="isuwitter.rb" pinned="false" current-in-tab="true">
+      <file leaf-file-name="isuwitter.rb" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/webapp/ruby/isuwitter.rb">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="1020" column="32" lean-forward="true" selection-start-line="1020" selection-start-column="32" selection-end-line="1020" selection-end-column="32" />
+            <state relative-caret-position="474">
+              <caret line="1017" column="16" lean-forward="true" selection-start-line="1017" selection-start-column="16" selection-end-line="1017" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -136,13 +133,13 @@
       <find>db.Query</find>
       <find>topHandler</find>
       <find>get_user_</find>
-      <find>user</find>
       <find>\n</find>
       <find>&quot;\n</find>
       <find>users</find>
       <find>get_</find>
       <find>initialize</find>
       <find>.each</find>
+      <find>user</find>
     </findStrings>
     <replaceStrings>
       <replace>&quot;,\n</replace>
@@ -157,8 +154,8 @@
         <option value="$PROJECT_DIR$/webapp/go/isutomo/app.go" />
         <option value="$PROJECT_DIR$/webapp/go/isuwitter/app.go" />
         <option value="$PROJECT_DIR$/sql/name_x.txt" />
-        <option value="$PROJECT_DIR$/webapp/ruby/isutomo.rb" />
         <option value="$PROJECT_DIR$/webapp/ruby/isuwitter.rb" />
+        <option value="$PROJECT_DIR$/webapp/ruby/isutomo.rb" />
       </list>
     </option>
   </component>
@@ -250,12 +247,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1508569356570</updated>
-      <workItem from="1508569359092" duration="630000" />
+      <workItem from="1508569359092" duration="732000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="630000" />
+    <option name="totallyTimeSpent" value="732000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -685,18 +682,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/webapp/ruby/isutomo.rb">
+    <entry file="file://$PROJECT_DIR$/webapp/ruby/isuwitter.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-217">
-          <caret line="1021" column="14" lean-forward="false" selection-start-line="1021" selection-start-column="10" selection-end-line="1021" selection-end-column="14" />
+        <state relative-caret-position="474">
+          <caret line="1017" column="16" lean-forward="true" selection-start-line="1017" selection-start-column="16" selection-end-line="1017" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/webapp/ruby/isuwitter.rb">
+    <entry file="file://$PROJECT_DIR$/webapp/ruby/isutomo.rb">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="1020" column="32" lean-forward="true" selection-start-line="1020" selection-start-column="32" selection-end-line="1020" selection-end-column="32" />
+        <state relative-caret-position="60">
+          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
           <folding />
         </state>
       </provider>
