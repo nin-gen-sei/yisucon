@@ -2,12 +2,12 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'mysql2-cs-bind'
 require 'json'
-require 'rack-lineprof'
 require_relative './const_users'
+#require 'rack-lineprof'
 
 module Isutomo
   class WebApp < Sinatra::Base
-    use Rack::Lineprof, profile: 'isutomo.rb'
+    #use Rack::Lineprof, profile: 'isutomo.rb'
     set :environment, ENV["RACK_ENV"] == "deployment"? :production : ENV["RACK_ENV"].to_sym
 
     USERS = const_users
@@ -39,7 +39,7 @@ module Isutomo
 
       def get_friends user
         user_id = get_user_id(user)
-        friends = db.xquery(%| SELECT * FROM friend WHERE me = ? |, user_id).all
+        friends = db.xquery(%| SELECT fname as friends FROM friend WHERE me = ? |, user_id).all
         return nil unless friends
       end
 
@@ -93,11 +93,10 @@ module Isutomo
 
     get '/:me' do
       me = params[:me]
-      friends = get_friends_concat(me)
+      friends = get_friends(me)
       halt 500, 'error' unless friends
 
-      res = { friends: friends }
-      json res
+      json friends
     end
 
     post '/:me' do
@@ -110,8 +109,7 @@ module Isutomo
       end
 
       set_friend me, new_friend
-      res = { friends: get_friends_concat me }
-      json res
+      json (get_friends me)
     end
 
     delete '/:me' do
@@ -122,8 +120,7 @@ module Isutomo
       end
 
       rm_friend user, del_friend
-      res = { friends: get_friends_concat me }
-      json res
+      json (get_friends me)
     end
   end
 end
