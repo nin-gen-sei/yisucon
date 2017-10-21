@@ -13,7 +13,7 @@ module Isutomo
     USERS = const_users
     USER_IDS = {}
     USERS.each_with_index { |v,i| USER_IDS[v] = i }
-    
+
     helpers do
       def db
         Thread.current[:isutomo_db] ||= Mysql2::Client.new(
