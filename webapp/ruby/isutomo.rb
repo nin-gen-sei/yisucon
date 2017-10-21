@@ -1,4 +1,5 @@
-require 'sinatra/base' require 'sinatra/json'
+require 'sinatra/base' 
+require 'sinatra/json'
 require 'mysql2-cs-bind'
 require 'json'
 require 'rack-lineprof'
