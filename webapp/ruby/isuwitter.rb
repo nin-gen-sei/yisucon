@@ -29,7 +29,7 @@ module Isuwitter
           host: ENV['YJ_ISUCON_DB_HOST'] || 'localhost',
           port: ENV['YJ_ISUCON_DB_PORT'] ? ENV['YJ_ISUCON_DB_PORT'].to_i : 3306,
           username: ENV['YJ_ISUCON_DB_USER'] || 'root',
-          password: ENV['YJ_ISUCON_DB_PASSWORD'],
+          password: ENV['YJ_ISUCON_DB_PASSWORD'] || 'Superpoe1234!',
           database: ENV['YJ_ISUCON_DB_NAME'] || 'isuwitter',
           reconnect: true,
         )
