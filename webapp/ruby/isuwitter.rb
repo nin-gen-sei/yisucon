@@ -1,6 +1,7 @@
 require 'digest/sha1'
 require 'json'
 require 'net/http'
+require 'rack-lineprof'
 
 require 'sinatra/base'
 require 'sinatra/json'
@@ -12,6 +13,7 @@ user_ids = {}
 module Isuwitter
   class WebApp < Sinatra::Base
     use Rack::Session::Cookie, key: 'isu_session', secret: 'kioicho'
+    use Rack::Lineprof, profile: 'isuwitter.rb'
     set :public_folder, File.expand_path('../../public', __FILE__)
 
     PERPAGE = 50
