@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'digest/sha1'
 require 'json'
 require 'net/http'
@@ -113,6 +114,12 @@ module Isuwitter
       if name.nil? || text == ''
         redirect '/'
       end
+
+      if text.length > 128
+        redirect '/abort'
+      end
+
+
 
       db.xquery(%|
         INSERT INTO tweets (user_id, text, created_at) VALUES (?, ?, NOW())
