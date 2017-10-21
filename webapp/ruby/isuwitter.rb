@@ -7,7 +7,6 @@ require 'sinatra/json'
 require 'mysql2-cs-bind'
 
 require 'const_users'
-user_ids = {}
 
 module Isuwitter
   class WebApp < Sinatra::Base
