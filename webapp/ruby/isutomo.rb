@@ -2,14 +2,17 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'mysql2-cs-bind'
 require 'json'
+require_relative './const_users'
 #require 'rack-lineprof'
-
 
 module Isutomo
   class WebApp < Sinatra::Base
     #use Rack::Lineprof, profile: 'isutomo.rb'
     set :environment, ENV["RACK_ENV"] == "deployment"? :production : ENV["RACK_ENV"].to_sym
 
+    USERS = const_users
+    USER_IDS = {}
+    USERS.each_with_index { |v,i| USER_IDS[v] = i }
 
     helpers do
       def db
@@ -23,17 +26,65 @@ module Isutomo
         )
       end
 
-      def get_friends user
-        friends = db.xquery(%| SELECT * FROM friends WHERE me = ? |, user).first
-        return nil unless friends
-        friends['friends'].split(',')
+      def get_user_id name
+        return nil if name.nil?
+        return USER_IDS[name]
       end
 
-      def set_friends user, friends
-        db.xquery(%|
-          UPDATE friends SET friends = ? WHERE me = ?
-        |, friends.join(','), user)
+      def get_user_name id
+        return nil if id.nil?
+        return USERS[id]
       end
+
+
+      def get_friends user
+        user_id = get_user_id(user)
+        friends = db.xquery(%| SELECT fname FROM friends WHERE me = ? |, user_id)
+        unless friends
+          return nil
+        end
+        return friends.pluck(:fname)
+      end
+
+
+      def get_friends_concat user
+        user_id = get_user_id(user)
+        friends = db.xquery(%| SELECT GROUP_CONCAT(fname separator ',') FROM friend WHERE me = ? |, user_id).first
+        return nil unless friends
+      end
+
+      def set_friend user, friend
+        user_id = get_user_id(user)
+        db.xquery(%|
+          INSERT into friends(me,fname) VALUE(?,?)
+        |, user_id,friend)
+      end
+
+      def rm_friend user, friend
+        user_id = get_user_id(user)
+        fid = get_user_id(user)
+        db.xquery(%|
+          DELETE from friends WHERE me = ? and fid = ?
+        |, user_id,fid)
+      end
+
+      def find_friend user, friend
+        user_id = get_user_id(user)
+        fid = get_user_id(friend)
+        f = db.xquery(%|
+           SELECT * FROM friends WHERE me = ? and fid = ?
+        |, user_id, fid)
+        return f ? True : False
+      end
+
+      def exist_friend user
+        user_id = get_user_id(user)
+        f = db.xquery(%|
+           SELECT * FROM friends WHERE me = ? and fid = ?
+        |, user_id)
+        return f ? True : False
+      end
+
     end
 
     get '/initialize' do
@@ -55,30 +106,26 @@ module Isutomo
     post '/:me' do
       me = params[:me]
       new_friend = params[:user]
-      friends = get_friends me
-      halt 500, 'error' unless friends
+      halt 500, 'error' unless exist_friend me
 
-      if friends.include? new_friend
+      if find_friend me, new_friend
         halt 500, new_friend + ' is already your friends.'
       end
 
-      friends.push new_friend
-      set_friends me, friends
-      res = { friends: friends }
+      set_friend me, new_friend
+      res = { friends: (get_friends me) }
       json res
     end
 
     delete '/:me' do
       me = params[:me]
       del_friend = params[:user]
-      friends = get_friends me
-      unless friends.include? del_friend
+      unless find_friend me, del_friend
         halt 500, del_friend + ' is not your friends.'
       end
 
-      friends.delete del_friend
-      set_friends me, friends
-      res = { friends: friends }
+      rm_friend user, del_friend
+      res = { friends: (get_friends me) }
       json res
     end
   end

@@ -19,6 +19,7 @@ module Isuwitter
     PERPAGE = 50
     ISUTOMO_ENDPOINT = 'http://localhost:8081'
 
+
     USERS = const_users
     USER_IDS = {}
     USERS.each_with_index { |v,i| USER_IDS[v] = i }
