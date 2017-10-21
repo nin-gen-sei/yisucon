@@ -6,8 +6,7 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'mysql2-cs-bind'
 
-require 'const_users'
-user_ids = {}
+require_relative './const_users.rb'
 
 module Isuwitter
   class WebApp < Sinatra::Base
@@ -17,9 +16,9 @@ module Isuwitter
     PERPAGE = 50
     ISUTOMO_ENDPOINT = 'http://localhost:8081'
 
-    users.each_with_index {|v,i|
-      user_ids[v] = i
-    }
+    USERS = const_users
+    USER_IDS = {}
+    USERS.each_with_index { |v,i| USER_IDS[v] = i }
 
     helpers do
       def db
@@ -51,12 +50,12 @@ module Isuwitter
 
       def get_user_id name
         return nil if name.nil?
-        return user_ids[name]
+        return USER_IDS[name]
       end
 
       def get_user_name id
         return nil if id.nil?
-        return users[id]
+        return USERS[id]
       end
 
       def htmlify text
