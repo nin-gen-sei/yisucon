@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'digest/sha1'
 require 'json'
 require 'net/http'
@@ -30,7 +31,7 @@ module Isuwitter
           host: ENV['YJ_ISUCON_DB_HOST'] || 'localhost',
           port: ENV['YJ_ISUCON_DB_PORT'] ? ENV['YJ_ISUCON_DB_PORT'].to_i : 3306,
           username: ENV['YJ_ISUCON_DB_USER'] || 'root',
-          password: ENV['YJ_ISUCON_DB_PASSWORD'],
+          password: ENV['YJ_ISUCON_DB_PASSWORD'] || 'Superpoe1234!',
           database: ENV['YJ_ISUCON_DB_NAME'] || 'isuwitter',
           reconnect: true,
         )
@@ -92,7 +93,7 @@ module Isuwitter
       friends_name = {}
       @tweets = []
       get_all_tweets(params[:until], 114514).each do |row|
-        row['html'] = htmlify row['text']
+        row['html'] = row['text']
         row['time'] = row['created_at'].strftime '%F %T'
         friends_name[row['user_id']] ||= get_user_name row['user_id']
         row['name'] = friends_name[row['user_id']]
@@ -115,9 +116,15 @@ module Isuwitter
         redirect '/'
       end
 
+      if text.length > 128
+        redirect '/abort'
+      end
+
+
+
       db.xquery(%|
         INSERT INTO tweets (user_id, text, created_at) VALUES (?, ?, NOW())
-      |, session[:userId], text)
+      |, session[:userId], htmlify(text))
 
       redirect '/'
     end
@@ -204,7 +211,7 @@ module Isuwitter
       friends_name = {}
       @tweets = []
       get_all_tweets(params[:until], PERPAGE, @query).each do |row|
-        row['html'] = htmlify row['text']
+        row['html'] = row['text']
         row['time'] = row['created_at'].strftime '%F %T'
         friends_name[row['user_id']] ||= get_user_name row['user_id']
         row['name'] = friends_name[row['user_id']]
@@ -257,7 +264,7 @@ module Isuwitter
 
       @tweets = []
       rows.each do |row|
-        row['html'] = htmlify row['text']
+        row['html'] = row['text']
         row['time'] = row['created_at'].strftime '%F %T'
         row['name'] = @user
         @tweets.push row
