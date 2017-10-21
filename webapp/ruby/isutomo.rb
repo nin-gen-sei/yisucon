@@ -2,9 +2,13 @@ require 'sinatra/base'
 require 'sinatra/json'
 require 'mysql2-cs-bind'
 require 'json'
+require 'rack-lineprof'
+
 
 module Isutomo
   class WebApp < Sinatra::Base
+    use Rack::Lineprof, profile: 'isutomo.rb'
+
 
     helpers do
       def db
