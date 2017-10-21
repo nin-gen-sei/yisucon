@@ -15,7 +15,6 @@ module Isuwitter
     use Rack::Session::Cookie, key: 'isu_session', secret: 'kioicho'
     #use Rack::Lineprof, profile: 'isuwitter.rb'
     set :environment, ENV["RACK_ENV"] == "deployment"? :production : ENV["RACK_ENV"].to_sym
-    set :public_folder, File.expand_path('../../public', __FILE__)
 
     PERPAGE = 50
     ISUTOMO_ENDPOINT = 'http://localhost:8081'
@@ -40,15 +39,15 @@ module Isuwitter
       def get_all_tweets(until_time, limit, query=nil)
         if until_time
           if query
-            db.xquery(%| SELECT * FROM tweets WHERE created_at < ? AND text LIKE ? ORDER BY created_at DESC LIMIT #{limit} |, until_time, "%#{query}%")
+            db.xquery(%| SELECT * FROM tweets WHERE created_at < ? AND text LIKE ? ORDER BY id DESC LIMIT #{limit} |, until_time, "%#{query}%")
           else
-            db.xquery(%| SELECT * FROM tweets WHERE created_at < ? ORDER BY created_at DESC LIMIT #{limit} |, until_time)
+            db.xquery(%| SELECT * FROM tweets WHERE created_at < ? ORDER BY id DESC LIMIT #{limit} |, until_time)
           end
         else
           if query
-            db.xquery(%| SELECT * FROM tweets WHERE text LIKE ? ORDER BY created_at DESC LIMIT #{limit} |, "%#{query}%")
+            db.xquery(%| SELECT * FROM tweets WHERE text LIKE ? ORDER BY id DESC LIMIT #{limit} |, "%#{query}%")
           else
-            db.query(%| SELECT * FROM tweets ORDER BY created_at DESC LIMIT #{limit} |)
+            db.query(%| SELECT * FROM tweets ORDER BY id DESC LIMIT #{limit} |)
           end
         end
       end
@@ -254,11 +253,11 @@ module Isuwitter
 
       if params[:until]
         rows = db.xquery(%|
-          SELECT * FROM tweets WHERE user_id = ? AND created_at < ? ORDER BY created_at DESC LIMIT #{PERPAGE}
+          SELECT * FROM tweets WHERE user_id = ? AND created_at < ? ORDER BY id DESC LIMIT #{PERPAGE}
         |, user_id, params[:until])
       else
         rows = db.xquery(%|
-          SELECT * FROM tweets WHERE user_id = ? ORDER BY created_at DESC LIMIT #{PERPAGE}
+          SELECT * FROM tweets WHERE user_id = ? ORDER BY id DESC LIMIT #{PERPAGE}
         |, user_id)
       end
 
