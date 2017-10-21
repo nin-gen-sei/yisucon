@@ -40,7 +40,10 @@ module Isutomo
       def get_friends user
         user_id = get_user_id(user)
         friends = db.xquery(%| SELECT fname FROM friends WHERE me = ? |, user_id)
-        return nil unless friends
+        unless friends
+          return nil
+        end
+        return friends.pluck(:fname)
       end
 
 
@@ -96,7 +99,8 @@ module Isutomo
       friends = get_friends(me)
       halt 500, 'error' unless friends
 
-      json friends
+      res = { friends: friends }
+      json res
     end
 
     post '/:me' do
@@ -109,7 +113,8 @@ module Isutomo
       end
 
       set_friend me, new_friend
-      json (get_friends me)
+      res = { friends: (get_friends me) }
+      json res
     end
 
     delete '/:me' do
@@ -120,7 +125,8 @@ module Isutomo
       end
 
       rm_friend user, del_friend
-      json (get_friends me)
+      res = { friends: (get_friends me) }
+      json res
     end
   end
 end
