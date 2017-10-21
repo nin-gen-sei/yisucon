@@ -40,7 +40,7 @@ def printIns(ins)
       if fid == nil
         return
       end
-      print (sprintf("INSERT INTO `friends` VALUES (%d,%d,%s);\n",
+      print (sprintf("INSERT INTO `friends` VALUES (%d,%d,'%s');\n",
              me_id,fid,fname))
     end
   }
