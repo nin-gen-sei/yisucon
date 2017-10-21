@@ -65,7 +65,7 @@ module Isutomo
         user_id = get_user_id(user)
         fid = get_user_id(friend)
         f = db.xquery(%|
-           SELECT FROM friends WHERE me = ? and fid = ?
+           SELECT * FROM friends WHERE me = ? and fid = ?
         |, user_id, fid)
         return f ? True : False
       end
@@ -73,7 +73,7 @@ module Isutomo
       def exist_friend user
         user_id = get_user_id(user)
         f = db.xquery(%|
-           SELECT FROM friends WHERE me = ? and fid = ?
+           SELECT * FROM friends WHERE me = ? and fid = ?
         |, user_id)
         return f ? True : False
       end
