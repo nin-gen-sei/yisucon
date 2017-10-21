@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     backports (3.6.8)
+    debugger-ruby_core_source (1.3.8)
     json (2.0.2)
     kgio (2.11.0)
     multi_json (1.12.1)
@@ -9,11 +10,17 @@ GEM
     mysql2-cs-bind (0.0.6)
       mysql2
     rack (1.6.5)
+    rack-lineprof (0.0.3)
+      rack (~> 1.5)
+      rblineprof (~> 0.3.6)
+      term-ansicolor (~> 1.3)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
     raindrops (0.17.0)
+    rblineprof (0.3.7)
+      debugger-ruby_core_source (~> 1.3)
     sinatra (1.4.7)
       rack (~> 1.5)
       rack-protection (~> 1.4)
@@ -25,7 +32,10 @@ GEM
       rack-test
       sinatra (~> 1.4.0)
       tilt (>= 1.3, < 3)
+    term-ansicolor (1.6.0)
+      tins (~> 1.0)
     tilt (2.0.5)
+    tins (1.15.0)
     unicorn (5.2.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
@@ -36,9 +46,10 @@ PLATFORMS
 DEPENDENCIES
   json
   mysql2-cs-bind
+  rack-lineprof
   sinatra
   sinatra-contrib
   unicorn
 
 BUNDLED WITH
-   1.13.7
+   1.15.4

@@ -1,4 +1,4 @@
-require 'sinatra/base'
+require 'sinatra/base' 
 require 'sinatra/json'
 require 'mysql2-cs-bind'
 require 'json'
@@ -8,6 +8,7 @@ require 'rack-lineprof'
 module Isutomo
   class WebApp < Sinatra::Base
     use Rack::Lineprof, profile: 'isutomo.rb'
+    set :environment, ENV["RACK_ENV"] == "deployment"? :production : ENV["RACK_ENV"].to_sym
 
 
     helpers do
@@ -16,7 +17,7 @@ module Isutomo
           host: ENV['YJ_ISUCON_DB_HOST'] || 'localhost',
           port: ENV['YJ_ISUCON_DB_PORT'] ? ENV['YJ_ISUCON_DB_PORT'].to_i : 3306,
           username: ENV['YJ_ISUCON_DB_USER'] || 'root',
-          password: ENV['YJ_ISUCON_DB_PASSWORD'],
+          password: ENV['YJ_ISUCON_DB_PASSWORD'] || 'Superpoe1234!',
           database: ENV['YJ_ISUCON_DB_NAME'] || 'isutomo',
           reconnect: true,
         )
@@ -36,7 +37,7 @@ module Isutomo
     end
 
     get '/initialize' do
-      ok = system("mysql -u root -D isutomo < #{Dir.pwd}/../sql/seed_isutomo.sql")
+      ok = system("mysql -u root -p'Superpoe1234!' -D isutomo < #{Dir.pwd}/../sql/seed_isutomo.sql")
       halt 500, 'error' unless ok
       res = { result: 'OK' }
       json res

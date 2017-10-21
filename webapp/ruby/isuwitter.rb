@@ -13,6 +13,7 @@ module Isuwitter
   class WebApp < Sinatra::Base
     use Rack::Session::Cookie, key: 'isu_session', secret: 'kioicho'
     use Rack::Lineprof, profile: 'isuwitter.rb'
+    set :environment, ENV["RACK_ENV"] == "deployment"? :production : ENV["RACK_ENV"].to_sym
     set :public_folder, File.expand_path('../../public', __FILE__)
 
     PERPAGE = 50
@@ -28,13 +29,13 @@ module Isuwitter
           host: ENV['YJ_ISUCON_DB_HOST'] || 'localhost',
           port: ENV['YJ_ISUCON_DB_PORT'] ? ENV['YJ_ISUCON_DB_PORT'].to_i : 3306,
           username: ENV['YJ_ISUCON_DB_USER'] || 'root',
-          password: ENV['YJ_ISUCON_DB_PASSWORD'],
+          password: ENV['YJ_ISUCON_DB_PASSWORD'] || 'Superpoe1234!',
           database: ENV['YJ_ISUCON_DB_NAME'] || 'isuwitter',
           reconnect: true,
         )
       end
 
-      def get_all_tweets(until_time, limit, query)
+      def get_all_tweets(until_time, limit, query=nil)
         if until_time
           if query
             db.xquery(%| SELECT * FROM tweets WHERE created_at < ? AND text LIKE ? ORDER BY created_at DESC LIMIT #{limit} |, until_time, "%#{query}%")
