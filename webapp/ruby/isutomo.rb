@@ -37,7 +37,7 @@ module Isutomo
     end
 
     get '/initialize' do
-      ok = system("mysql -u root -D isutomo < #{Dir.pwd}/../sql/seed_isutomo.sql")
+      ok = system("mysql -u root -p'Superpoe1234!' -D isutomo < #{Dir.pwd}/../sql/seed_isutomo.sql")
       halt 500, 'error' unless ok
       res = { result: 'OK' }
       json res
