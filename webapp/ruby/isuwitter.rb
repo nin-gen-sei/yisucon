@@ -115,7 +115,7 @@ module Isuwitter
         redirect '/'
       end
 
-      if text.length > 256
+      if text.length > 128
         redirect '/abort'
       end
 
