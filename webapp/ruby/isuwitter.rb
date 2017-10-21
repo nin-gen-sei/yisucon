@@ -92,7 +92,7 @@ module Isuwitter
       friends_name = {}
       @tweets = []
       get_all_tweets(params[:until], 114514).each do |row|
-        row['html'] = htmlify row['text']
+        row['html'] = row['text']
         row['time'] = row['created_at'].strftime '%F %T'
         friends_name[row['user_id']] ||= get_user_name row['user_id']
         row['name'] = friends_name[row['user_id']]
@@ -123,7 +123,7 @@ module Isuwitter
 
       db.xquery(%|
         INSERT INTO tweets (user_id, text, created_at) VALUES (?, ?, NOW())
-      |, session[:userId], text)
+      |, session[:userId], htmlify(text))
 
       redirect '/'
     end
@@ -210,7 +210,7 @@ module Isuwitter
       friends_name = {}
       @tweets = []
       get_all_tweets(params[:until], PERPAGE, @query).each do |row|
-        row['html'] = htmlify row['text']
+        row['html'] = row['text']
         row['time'] = row['created_at'].strftime '%F %T'
         friends_name[row['user_id']] ||= get_user_name row['user_id']
         row['name'] = friends_name[row['user_id']]
@@ -263,7 +263,7 @@ module Isuwitter
 
       @tweets = []
       rows.each do |row|
-        row['html'] = htmlify row['text']
+        row['html'] = row['text']
         row['time'] = row['created_at'].strftime '%F %T'
         row['name'] = @user
         @tweets.push row
