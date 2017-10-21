@@ -13,6 +13,7 @@ module Isuwitter
   class WebApp < Sinatra::Base
     use Rack::Session::Cookie, key: 'isu_session', secret: 'kioicho'
     use Rack::Lineprof, profile: 'isuwitter.rb'
+    set :environment, ENV["RACK_ENV"] == "deployment"? :production : ENV["RACK_ENV"].to_sym
     set :public_folder, File.expand_path('../../public', __FILE__)
 
     PERPAGE = 50

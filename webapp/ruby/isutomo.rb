@@ -8,6 +8,7 @@ require 'rack-lineprof'
 module Isutomo
   class WebApp < Sinatra::Base
     use Rack::Lineprof, profile: 'isutomo.rb'
+    set :environment, ENV["RACK_ENV"] == "deployment"? :production : ENV["RACK_ENV"].to_sym
 
 
     helpers do
