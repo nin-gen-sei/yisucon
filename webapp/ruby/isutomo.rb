@@ -10,7 +10,10 @@ module Isutomo
     use Rack::Lineprof, profile: 'isutomo.rb'
     set :environment, ENV["RACK_ENV"] == "deployment"? :production : ENV["RACK_ENV"].to_sym
 
-
+    USERS = const_users
+    USER_IDS = {}
+    USERS.each_with_index { |v,i| USER_IDS[v] = i }
+    
     helpers do
       def db
         Thread.current[:isutomo_db] ||= Mysql2::Client.new(
@@ -25,13 +28,14 @@ module Isutomo
 
       def get_user_id name
         return nil if name.nil?
-        return user_ids[name]
+        return USER_IDS[name]
       end
 
       def get_user_name id
         return nil if id.nil?
-        return users[id]
+        return USERS[id]
       end
+
 
       def get_friends user
         user_id = get_user_id(user)
