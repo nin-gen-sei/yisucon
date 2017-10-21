@@ -39,7 +39,7 @@ module Isutomo
 
       def get_friends user
         user_id = get_user_id(user)
-        friends = db.xquery(%| SELECT fname as friends FROM friend WHERE me = ? |, user_id).all
+        friends = db.xquery(%| SELECT fname FROM friends WHERE me = ? |, user_id)
         return nil unless friends
       end
 
