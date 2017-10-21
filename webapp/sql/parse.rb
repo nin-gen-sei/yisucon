@@ -46,7 +46,7 @@ def printIns(ins)
   }
 end
 
-File.open("seed_isutomo.sql"){ |f|
+File.open("pre_seed_isutomo.sql"){ |f|
   f.each_line{|line|
     ary = line.split(' ')
     if ary[0] == "INSERT"
